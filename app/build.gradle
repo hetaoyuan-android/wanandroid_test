@@ -36,5 +36,6 @@ dependencies {
 
     api rootProject.ext.dependencies['statusbar-util']
     api rootProject.ext.dependencies['eventbus']
+    api rootProject.ext.dependencies['lottie']
 
 }
