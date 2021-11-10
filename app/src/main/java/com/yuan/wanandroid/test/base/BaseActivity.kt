@@ -14,7 +14,7 @@ import com.yuan.wanandroid.test.utils.EventBusUtils
 abstract class BaseActivity: AppCompatActivity() {
 protected lateinit var mContext: Context
     @RequiresApi(Build.VERSION_CODES.M)
-    final override fun onCreate(savedInstanceState: Bundle?) {
+    open override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutResId())
         mContext = this
