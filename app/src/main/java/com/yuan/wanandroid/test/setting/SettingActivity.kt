@@ -23,6 +23,10 @@ class SettingActivity : BaseMVPActivity<SettingContract.View, SettingPresenter>(
         return SettingPresenter()
     }
 
+    override fun getLayoutResId(): Int {
+        return R.layout.activity_setting
+    }
+
     override fun initView() {
         toolbar = findViewById(R.id.tb_setting)
         logoutBtn = findViewById(R.id.btn_logout)
@@ -36,9 +40,7 @@ class SettingActivity : BaseMVPActivity<SettingContract.View, SettingPresenter>(
         }
     }
 
-    override fun getLayoutResId(): Int {
-        return R.layout.activity_setting
-    }
+
 
     override fun initData() {
         super.initData()

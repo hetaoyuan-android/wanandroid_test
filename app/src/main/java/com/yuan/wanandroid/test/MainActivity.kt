@@ -15,6 +15,7 @@ import com.jaeger.library.StatusBarUtil
 import com.yuan.wanandroid.test.base.mvp.BaseMVPActivity
 import com.yuan.wanandroid.test.common.EventBusSubscribe
 import com.yuan.wanandroid.test.common.bean.FragmentItem
+import com.yuan.wanandroid.test.db.DbManager
 import com.yuan.wanandroid.test.db.bean.User
 import com.yuan.wanandroid.test.gank.GankFragment
 import com.yuan.wanandroid.test.home.HomeFragment
@@ -111,9 +112,10 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainPresenter>(), MainCo
         }
         //默认选中第一个
         mainViewPager.currentItem = 0
+        changeTabView(mainTabLayout.getTabAt(0), 22f, true)
         mainTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(p0: TabLayout.Tab?) {
-                TODO("Not yet implemented")
+
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -125,6 +127,33 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainPresenter>(), MainCo
             }
 
         })
+        setUsernameFromCache()
+        presenter.getUserInfo()
+        mainSearch.setOnClickListener(this)
+    }
+
+    private fun setUsernameFromCache() {
+        loggedIn = isCookieNotEmpty(mContext)
+        if (!loggedIn) {
+            usernameTextView.text = getString(R.string.click_to_login)
+        } else {
+            val user = getCacheUser()
+            val userName : String
+            userName = if (user != null) {
+                user.username
+            } else {
+                ""
+            }
+            usernameTextView.text = userName
+        }
+    }
+
+    private fun getCacheUser(): User? {
+        val users = DbManager.getInstance().getUserDao().loadAll()
+        if (users != null && users.size > 0) {
+            return users[0]
+        }
+        return null
     }
 
     private fun changeTabView(tab: TabLayout.Tab?, textSize: Float, isSelected: Boolean) {
@@ -142,7 +171,11 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainPresenter>(), MainCo
 
 
     override fun onUserInfo(user: User) {
-        TODO("Not yet implemented")
+        Log.e("MainActivity", user.toString())
+        loggedIn = isCookieNotEmpty(mContext)
+        if (loggedIn) {
+            usernameTextView.text = user.username
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -168,6 +201,11 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainPresenter>(), MainCo
                     gotoLoginActivity()
                     closeDrawer()
                 }
+            }
+
+            //搜索
+            R.id.iv_main_search -> {
+
             }
         }
     }
