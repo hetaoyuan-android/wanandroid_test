@@ -7,21 +7,19 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.net.ssl.SSLSocketFactory
 
 class RetrofitClient {
-    lateinit var okHttpClient: OkHttpClient
+    var okHttpClient: OkHttpClient = OkHttpClient().newBuilder()
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(10, TimeUnit.SECONDS)
+        .sslSocketFactory(SSLSocketClient.getSSLSocketFactory())
+        .hostnameVerifier(SSLSocketClient.getHostnameVerifier())
+        .addInterceptor(logInterceptor())
+        .cookieJar(MainApp.getInstance().getPersistentCookieJar())
+        .build()
     lateinit var retrofit: Retrofit
 
     private constructor() {
-        okHttpClient = OkHttpClient().newBuilder()
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .sslSocketFactory(SSLSocketClient.getSSLSocketFactory())
-            .hostnameVerifier(SSLSocketClient.getHostnameVerifier())
-            .addInterceptor(logInterceptor())
-            .cookieJar(MainApp.getInstance().getPersistentCookieJar())
-            .build()
 
         retrofit = Retrofit.Builder()
             .baseUrl("https://www.wanandroid.com/")

@@ -1,11 +1,12 @@
 package com.yuan.wanandroid.test
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
-import android.widget.TableLayout
 import android.widget.TextView
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
@@ -22,8 +23,12 @@ import com.yuan.wanandroid.test.main.bean.LoggedInEvent
 import com.yuan.wanandroid.test.main.contract.MainContract
 import com.yuan.wanandroid.test.main.presenter.MainPresenter
 import com.yuan.wanandroid.test.project.ProjectFragment
+import com.yuan.wanandroid.test.setting.SettingActivity
 import com.yuan.wanandroid.test.system.SystemFragment
+import com.yuan.wanandroid.test.user.activity.LoginActivity
 import com.yuan.wanandroid.test.utils.blur
+import com.yuan.wanandroid.test.utils.gotoActivity
+import com.yuan.wanandroid.test.utils.isCookieNotEmpty
 import com.yuan.wanandroid.test.widgets.MainViewPager
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -78,6 +83,9 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainPresenter>(), MainCo
                 R.id.item_nav_happy_minute -> {
 //                    gotoActivity(mContext as Activity, MeiziActivity().javaClass)
                 }
+                R.id.item_nav_setting -> {
+                    gotoActivity(mContext as Activity, SettingActivity().javaClass)
+                }
             }
 
             true
@@ -108,15 +116,28 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainPresenter>(), MainCo
                 TODO("Not yet implemented")
             }
 
-            override fun onTabUnselected(p0: TabLayout.Tab?) {
-                TODO("Not yet implemented")
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                changeTabView(tab, 18f, false)
             }
 
-            override fun onTabSelected(p0: TabLayout.Tab?) {
-                TODO("Not yet implemented")
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                changeTabView(tab, 22f, true)
             }
 
         })
+    }
+
+    private fun changeTabView(tab: TabLayout.Tab?, textSize: Float, isSelected: Boolean) {
+        val view: View? = tab?.customView
+        val textView: TextView? = view?.findViewById(R.id.tv_tab_title)
+        textView?.textSize = textSize
+        if (isSelected) {
+            textView?.setTextColor(resources.getColor(android.R.color.black))
+            val width = textView?.measuredWidth
+            Log.e("debug", "width = $width")
+        } else {
+            textView?.setTextColor(resources.getColor(R.color.gray_959698))
+        }
     }
 
 
@@ -127,6 +148,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainPresenter>(), MainCo
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onLoginStatusChanged(event: LoggedInEvent) {
         val user = event.user
+        Log.e("MainActivity", "onLoginStatusChanged" + event.user.toString())
         setUsername(user)
     }
 
@@ -139,7 +161,19 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainPresenter>(), MainCo
     }
 
     override fun onClick(v: View?) {
-        TODO("Not yet implemented")
+        when(v?.id) {
+            R.id.tv_nav_username -> {
+                loggedIn = isCookieNotEmpty(mContext)
+                if (!loggedIn) {
+                    gotoLoginActivity()
+                    closeDrawer()
+                }
+            }
+        }
+    }
+
+    private fun gotoLoginActivity() {
+        gotoActivity(this, LoginActivity().javaClass)
     }
 
     /**
