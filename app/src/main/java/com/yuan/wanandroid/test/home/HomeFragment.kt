@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.chad.library.adapter.base.BaseQuickAdapter
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
@@ -22,6 +23,8 @@ import com.yuan.wanandroid.test.home.bean.Article
 import com.yuan.wanandroid.test.home.bean.Banner
 import com.yuan.wanandroid.test.home.contract.HomeContract
 import com.yuan.wanandroid.test.home.presenter.HomePresenter
+import com.yuan.wanandroid.test.utils.*
+import com.yuan.wanandroid.test.web.WebViewActivity
 import com.yuan.wanandroid.test.widgets.LinearItemDecoration
 
 //首页
@@ -71,6 +74,21 @@ class HomeFragment : BaseMVPFragment<HomeContract.View, HomePresenter>(), HomeCo
 
         adapter.addHeaderView(headerView)
         // recyclerview 点击监听
+        // recyclerview 点击监听
+        adapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
+            val bundle = Bundle()
+            val bean = dataList[position]
+            bundle.putString(URL, bean.link)
+            bundle.putInt(ID, bean.id)
+            bundle.putString(AUTHOR, bean.author)
+            bundle.putString(LINK, bean.link)
+            bundle.putString(TITLE, bean.title)
+            gotoActivity(
+                activity!!,
+                WebViewActivity().javaClass,
+                bundle
+            )
+        }
         recyclerView?.adapter = adapter
         //获取banner
         presenter.getBanner()

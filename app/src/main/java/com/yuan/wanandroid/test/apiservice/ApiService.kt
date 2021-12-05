@@ -5,7 +5,10 @@ import com.yuan.wanandroid.test.db.bean.User
 import com.yuan.wanandroid.test.home.bean.Article
 import com.yuan.wanandroid.test.home.bean.ArticleResponse
 import com.yuan.wanandroid.test.home.bean.Banner
+import com.yuan.wanandroid.test.project.bean.ProjectResponse
+import com.yuan.wanandroid.test.project.bean.ProjectTab
 import com.yuan.wanandroid.test.setting.bean.LogoutResult
+import com.yuan.wanandroid.test.web.bean.AddFavoriteResponse
 import io.reactivex.Observable
 import retrofit2.http.*
 
@@ -27,5 +30,19 @@ interface ApiService {
 
     @GET("article/list/{page}/json")
     fun getArticles(@Path("page") page: Int): Observable<BaseResponse<ArticleResponse>>
+
+    @GET("project/list/{page}/json")
+    fun getProjectLists(@Path("page") page: Int, @Query("cid") cid: Int): Observable<BaseResponse<ProjectResponse>>
+
+    @GET("project/tree/json")
+    fun getProjectTabs(): Observable<BaseResponse<List<ProjectTab>>>
+
+    @POST("lg/collect/add/json")
+    @FormUrlEncoded
+    fun addFavorite(@Field("title") title: String, @Field("author") author: String, @Field("link") link: String): Observable<BaseResponse<AddFavoriteResponse>>
+
+    @POST("lg/collect/{id}/json")
+    fun addFavorite(@Path("id") id: Int): Observable<BaseResponse<AddFavoriteResponse>>
+
 
 }
