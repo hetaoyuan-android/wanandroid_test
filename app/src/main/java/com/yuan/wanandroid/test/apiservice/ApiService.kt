@@ -8,6 +8,7 @@ import com.yuan.wanandroid.test.home.bean.Banner
 import com.yuan.wanandroid.test.project.bean.ProjectResponse
 import com.yuan.wanandroid.test.project.bean.ProjectTab
 import com.yuan.wanandroid.test.setting.bean.LogoutResult
+import com.yuan.wanandroid.test.system.bean.SystemCategory
 import com.yuan.wanandroid.test.web.bean.AddFavoriteResponse
 import io.reactivex.Observable
 import retrofit2.http.*
@@ -44,5 +45,10 @@ interface ApiService {
     @POST("lg/collect/{id}/json")
     fun addFavorite(@Path("id") id: Int): Observable<BaseResponse<AddFavoriteResponse>>
 
+    @GET("tree/json")
+    fun getSystem(): Observable<BaseResponse<List<SystemCategory>>>
+
+    @GET("article/list/{page}/json")
+    fun getSystemArticles(@Path("page") page: Int, @Query("cid") cid: Int): Observable<BaseResponse<ArticleResponse>>
 
 }
