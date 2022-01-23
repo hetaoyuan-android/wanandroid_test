@@ -24,6 +24,7 @@ import com.yuan.wanandroid.test.main.bean.LoggedInEvent
 import com.yuan.wanandroid.test.main.contract.MainContract
 import com.yuan.wanandroid.test.main.presenter.MainPresenter
 import com.yuan.wanandroid.test.project.ProjectFragment
+import com.yuan.wanandroid.test.search.SearchActivity
 import com.yuan.wanandroid.test.setting.SettingActivity
 import com.yuan.wanandroid.test.system.SystemFragment
 import com.yuan.wanandroid.test.user.activity.LoginActivity
@@ -205,9 +206,14 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainPresenter>(), MainCo
 
             //搜索
             R.id.iv_main_search -> {
-
+                gotoSearchActivity()
+                overridePendingTransition(0, 0)
             }
         }
+    }
+
+    private fun gotoSearchActivity() {
+        gotoActivity(this, SearchActivity().javaClass)
     }
 
     private fun gotoLoginActivity() {

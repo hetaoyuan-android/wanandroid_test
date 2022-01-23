@@ -7,6 +7,8 @@ import com.yuan.wanandroid.test.home.bean.ArticleResponse
 import com.yuan.wanandroid.test.home.bean.Banner
 import com.yuan.wanandroid.test.project.bean.ProjectResponse
 import com.yuan.wanandroid.test.project.bean.ProjectTab
+import com.yuan.wanandroid.test.search.bean.SearchHot
+import com.yuan.wanandroid.test.search.bean.SearchResultResponse
 import com.yuan.wanandroid.test.setting.bean.LogoutResult
 import com.yuan.wanandroid.test.system.bean.SystemCategory
 import com.yuan.wanandroid.test.web.bean.AddFavoriteResponse
@@ -50,5 +52,14 @@ interface ApiService {
 
     @GET("article/list/{page}/json")
     fun getSystemArticles(@Path("page") page: Int, @Query("cid") cid: Int): Observable<BaseResponse<ArticleResponse>>
+
+
+    @GET("hotkey/json")
+    fun getSearchHot(): Observable<BaseResponse<ArrayList<SearchHot>>>
+
+    @POST("article/query/{page}/json")
+    @FormUrlEncoded
+    fun getSearchResult(@Path("page") page: Int, @Field("k") keyword: String): Observable<BaseResponse<SearchResultResponse>>
+
 
 }
